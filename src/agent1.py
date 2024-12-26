@@ -33,6 +33,10 @@ def read_cu_file(file_path):
     except IOError:
         print(f"读取文件 {file_path} 时发生错误。")
 def use_nvcc_ncu():
+    # 获取当前脚本所在目录
+    current_dir = os.path.dirname(__file__)
+    # 使用函数读取并输出.cu文件内容
+    file_path = os.path.join(current_dir, '..', 'NcuOutput')
     # 编译 CUDA 代码
     nvcc_command = "nvcc -o demo demo.cu"
     print("Running:", nvcc_command)
@@ -47,20 +51,29 @@ def use_nvcc_ncu():
 
     # 将 ncu 的输出保存到文件
     if output:
-        with open("Ncu_output.txt", "w") as file:
+        
+
+        output_path =file_path+'\\'+ get_file_name(file_path, False) + "_ncu_output.txt"
+
+        with open(output_path, "w") as file:
             file.write(output)
         print("Output saved to Ncu_output.txt")
-def get_file_name(file_path):
+    
+def get_file_name(file_path, with_extension):
     # 从文件路径中提取文件名
-    return os.path.basename(file_path)
+    if with_extension:
+        return os.path.basename(file_path)
+    else:
+        return os.path.splitext(os.path.basename(file_path))[0]
 if __name__ == "__main__":
     # 获取当前脚本所在目录
     current_dir = os.path.dirname(__file__)
     # 使用函数读取并输出.cu文件内容
     file_path = os.path.join(current_dir, '..', 'dataset', 'demo.cu')
+    print(file_path)
     daima = read_cu_file(file_path)
-    print(get_file_name(file_path))
-    
+    print(get_file_name(file_path,True))
+    print(get_file_name(file_path,False))
     # 进行ncu分析
 
 
